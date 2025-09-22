@@ -493,7 +493,7 @@ const Products = () => {
             <p className="mt-4 text-gray-600">Loading products...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-6 sm:mx-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -526,7 +526,7 @@ const Products = () => {
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4">
                       <div className="flex items-center">
                                                 <div className="h-10 w-10 flex-shrink-0">
                           <img
@@ -536,15 +536,20 @@ const Products = () => {
                             onError={(e) => { e.target.src = 'https://res.cloudinary.com/dpznya3mz/image/upload/v1756651314/ogla/static/imageplaceholder.webp/imageplaceholder.png'; }}
                           />
                         </div>
-                        <div className="ml-4">
+                        <div className="ml-4 min-w-0 flex-1">
                           <Link 
                             to={`/product/${product.slug}`}
-                            className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer"
+                            className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer block truncate"
                             target="_blank"
                           >
                             {product.name}
                           </Link>
-                          <div className="text-sm text-gray-500">{product.shortDescription || product.description.substring(0, 50)}...</div>
+                          <div className="text-sm text-gray-500 truncate max-w-xs">
+                            {(product.shortDescription || product.description || '').length > 50 
+                              ? (product.shortDescription || product.description || '').substring(0, 50) + '...'
+                              : (product.shortDescription || product.description || '')
+                            }
+                          </div>
                         </div>
                       </div>
                     </td>

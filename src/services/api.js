@@ -3,7 +3,7 @@ import axios from "axios";
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
-  timeout: 30000, // Increased to 30 seconds for Azure hosted environment
+  timeout: 30000, // Increased to 30 seconds for dashboard queries
   headers: {
     "Content-Type": "application/json",
   },

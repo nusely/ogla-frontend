@@ -7,6 +7,7 @@ import {
   UsersIcon,
   ClipboardDocumentListIcon,
   ClockIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 import api from "../../services/api";
 
@@ -45,7 +46,28 @@ const Dashboard = () => {
         return percent > 0 ? `+${percent}%` : `${percent}%`;
       };
 
+      const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-GH', {
+          style: 'currency',
+          currency: 'GHS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+          currencyDisplay: 'symbol',
+        }).format(amount).replace('GHS', '').trim();
+      };
+
       const statsData = [
+        // Only show revenue card for super_admin
+        ...(user?.role === "super_admin" ? [{
+          name: "Total Revenue",
+          value: formatCurrency(dashboardData.revenue?.total || 0),
+          change: formatPercentageChange(dashboardData.revenue?.growthPercent || 0),
+          changeType:
+            (dashboardData.revenue?.growthPercent || 0) >= 0 ? "positive" : "negative",
+          icon: CurrencyDollarIcon,
+          color: "bg-green-500",
+          subtitle: `Last month: ${formatCurrency(dashboardData.revenue?.lastMonth || 0)}`,
+        }] : []),
         {
           name: "Total Products",
           value: dashboardData.products.total.toString(),
@@ -237,10 +259,12 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${user?.role === "super_admin" ? "lg:grid-cols-3 xl:grid-cols-5" : "lg:grid-cols-4"}`}>
         {stats.map((stat) => {
           const getNavigationPath = (statName) => {
             switch (statName) {
+              case "Total Revenue":
+                return "/admin/requests";
               case "Total Products":
                 return "/admin/products";
               case "Total Stories":
@@ -279,6 +303,11 @@ const Dashboard = () => {
                   <p className="text-2xl font-bold text-gray-900">
                     {stat.value}
                   </p>
+                  {stat.subtitle && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {stat.subtitle}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="mt-4">

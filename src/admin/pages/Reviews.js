@@ -29,7 +29,7 @@ const Reviews = () => {
       return;
     }
     
-    if (user.role !== 'admin') {
+    if (user.role !== 'admin' && user.role !== 'super_admin') {
       setError('Access denied. Admin privileges required.');
       setLoading(false);
       return;
